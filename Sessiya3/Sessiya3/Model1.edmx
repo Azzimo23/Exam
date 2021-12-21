@@ -1,0 +1,362 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="Хранилище АбонентыModel" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="principal_id" Type="int" Nullable="false" />
+          <Property Name="diagram_id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="version" Type="int" />
+          <Property Name="definition" Type="varbinary(max)" />
+        </EntityType>
+        <EntityType Name="Абонент">
+          <Key>
+            <PropertyRef Name="Номер_Абонента" />
+          </Key>
+          <Property Name="Номер_Абонента" Type="int" Nullable="false" />
+          <Property Name="ФИО_Абонента" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Адрес" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Код_телефона" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Города">
+          <Key>
+            <PropertyRef Name="Код_города" />
+          </Key>
+          <Property Name="Код_города" Type="int" Nullable="false" />
+          <Property Name="Название_города" Type="varchar" MaxLength="50" />
+          <Property Name="Код_тарифа" Type="int" />
+        </EntityType>
+        <EntityType Name="Разговоры">
+          <Key>
+            <PropertyRef Name="Номер_разговора" />
+          </Key>
+          <Property Name="Номер_разговора" Type="int" Nullable="false" />
+          <Property Name="Дата_разговора" Type="date" />
+          <Property Name="Продолжительность_разговора" Type="int" />
+          <Property Name="Код_города" Type="int" />
+          <Property Name="Код_телефона" Type="int" />
+        </EntityType>
+        <EntityType Name="Тариф_Оплата">
+          <Key>
+            <PropertyRef Name="Код_тарифа" />
+          </Key>
+          <Property Name="Тариф" Type="int" />
+          <Property Name="Оплата" Type="nvarchar" MaxLength="50" />
+          <Property Name="Код_тарифа" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Телефон">
+          <Key>
+            <PropertyRef Name="Код_телефона" />
+          </Key>
+          <Property Name="Номер_телефона" Type="nchar" MaxLength="20" />
+          <Property Name="Номер_договора" Type="nchar" MaxLength="20" />
+          <Property Name="Дата_установки_телефона" Type="date" />
+          <Property Name="Код_телефона" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Абонент_Телефон">
+          <End Role="Телефон" Type="Self.Телефон" Multiplicity="1" />
+          <End Role="Абонент" Type="Self.Абонент" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Телефон">
+              <PropertyRef Name="Код_телефона" />
+            </Principal>
+            <Dependent Role="Абонент">
+              <PropertyRef Name="Код_телефона" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Города_Тариф_Оплата">
+          <End Role="Тариф_Оплата" Type="Self.Тариф_Оплата" Multiplicity="0..1" />
+          <End Role="Города" Type="Self.Города" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Тариф_Оплата">
+              <PropertyRef Name="Код_тарифа" />
+            </Principal>
+            <Dependent Role="Города">
+              <PropertyRef Name="Код_тарифа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Разговоры_Города">
+          <End Role="Города" Type="Self.Города" Multiplicity="0..1" />
+          <End Role="Разговоры" Type="Self.Разговоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Города">
+              <PropertyRef Name="Код_города" />
+            </Principal>
+            <Dependent Role="Разговоры">
+              <PropertyRef Name="Код_города" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Разговоры_Телефон">
+          <End Role="Телефон" Type="Self.Телефон" Multiplicity="0..1" />
+          <End Role="Разговоры" Type="Self.Разговоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Телефон">
+              <PropertyRef Name="Код_телефона" />
+            </Principal>
+            <Dependent Role="Разговоры">
+              <PropertyRef Name="Код_телефона" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="Хранилище АбонентыModelContainer">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Абонент" EntityType="Self.Абонент" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Города" EntityType="Self.Города" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Разговоры" EntityType="Self.Разговоры" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Тариф_Оплата" EntityType="Self.Тариф_Оплата" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Телефон" EntityType="Self.Телефон" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_Абонент_Телефон" Association="Self.FK_Абонент_Телефон">
+            <End Role="Телефон" EntitySet="Телефон" />
+            <End Role="Абонент" EntitySet="Абонент" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Города_Тариф_Оплата" Association="Self.FK_Города_Тариф_Оплата">
+            <End Role="Тариф_Оплата" EntitySet="Тариф_Оплата" />
+            <End Role="Города" EntitySet="Города" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Разговоры_Города" Association="Self.FK_Разговоры_Города">
+            <End Role="Города" EntitySet="Города" />
+            <End Role="Разговоры" EntitySet="Разговоры" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Разговоры_Телефон" Association="Self.FK_Разговоры_Телефон">
+            <End Role="Телефон" EntitySet="Телефон" />
+            <End Role="Разговоры" EntitySet="Разговоры" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="АбонентыModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="sysdiagrams">
+          <Key>
+            <PropertyRef Name="diagram_id" />
+          </Key>
+          <Property Name="name" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="principal_id" Type="Int32" Nullable="false" />
+          <Property Name="diagram_id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="version" Type="Int32" />
+          <Property Name="definition" Type="Binary" MaxLength="Max" FixedLength="false" />
+        </EntityType>
+        <EntityType Name="Абонент">
+          <Key>
+            <PropertyRef Name="Номер_Абонента" />
+          </Key>
+          <Property Name="Номер_Абонента" Type="Int32" Nullable="false" />
+          <Property Name="ФИО_Абонента" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Адрес" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Код_телефона" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Телефон" Relationship="Self.FK_Абонент_Телефон" FromRole="Абонент" ToRole="Телефон" />
+        </EntityType>
+        <EntityType Name="Города">
+          <Key>
+            <PropertyRef Name="Код_города" />
+          </Key>
+          <Property Name="Код_города" Type="Int32" Nullable="false" />
+          <Property Name="Название_города" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Код_тарифа" Type="Int32" />
+          <NavigationProperty Name="Тариф_Оплата" Relationship="Self.FK_Города_Тариф_Оплата" FromRole="Города" ToRole="Тариф_Оплата" />
+          <NavigationProperty Name="Разговоры" Relationship="Self.FK_Разговоры_Города" FromRole="Города" ToRole="Разговоры" />
+        </EntityType>
+        <EntityType Name="Разговоры">
+          <Key>
+            <PropertyRef Name="Номер_разговора" />
+          </Key>
+          <Property Name="Номер_разговора" Type="Int32" Nullable="false" />
+          <Property Name="Дата_разговора" Type="DateTime" Precision="0" />
+          <Property Name="Продолжительность_разговора" Type="Int32" />
+          <Property Name="Код_города" Type="Int32" />
+          <Property Name="Код_телефона" Type="Int32" />
+          <NavigationProperty Name="Города" Relationship="Self.FK_Разговоры_Города" FromRole="Разговоры" ToRole="Города" />
+          <NavigationProperty Name="Телефон" Relationship="Self.FK_Разговоры_Телефон" FromRole="Разговоры" ToRole="Телефон" />
+        </EntityType>
+        <EntityType Name="Тариф_Оплата">
+          <Key>
+            <PropertyRef Name="Код_тарифа" />
+          </Key>
+          <Property Name="Тариф" Type="Int32" />
+          <Property Name="Оплата" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Код_тарифа" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Города" Relationship="Self.FK_Города_Тариф_Оплата" FromRole="Тариф_Оплата" ToRole="Города" />
+        </EntityType>
+        <EntityType Name="Телефон">
+          <Key>
+            <PropertyRef Name="Код_телефона" />
+          </Key>
+          <Property Name="Номер_телефона" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Номер_договора" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Дата_установки_телефона" Type="DateTime" Precision="0" />
+          <Property Name="Код_телефона" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Абонент" Relationship="Self.FK_Абонент_Телефон" FromRole="Телефон" ToRole="Абонент" />
+          <NavigationProperty Name="Разговоры" Relationship="Self.FK_Разговоры_Телефон" FromRole="Телефон" ToRole="Разговоры" />
+        </EntityType>
+        <Association Name="FK_Абонент_Телефон">
+          <End Role="Телефон" Type="Self.Телефон" Multiplicity="1" />
+          <End Role="Абонент" Type="Self.Абонент" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Телефон">
+              <PropertyRef Name="Код_телефона" />
+            </Principal>
+            <Dependent Role="Абонент">
+              <PropertyRef Name="Код_телефона" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Города_Тариф_Оплата">
+          <End Role="Тариф_Оплата" Type="Self.Тариф_Оплата" Multiplicity="0..1" />
+          <End Role="Города" Type="Self.Города" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Тариф_Оплата">
+              <PropertyRef Name="Код_тарифа" />
+            </Principal>
+            <Dependent Role="Города">
+              <PropertyRef Name="Код_тарифа" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Разговоры_Города">
+          <End Role="Города" Type="Self.Города" Multiplicity="0..1" />
+          <End Role="Разговоры" Type="Self.Разговоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Города">
+              <PropertyRef Name="Код_города" />
+            </Principal>
+            <Dependent Role="Разговоры">
+              <PropertyRef Name="Код_города" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Разговоры_Телефон">
+          <End Role="Телефон" Type="Self.Телефон" Multiplicity="0..1" />
+          <End Role="Разговоры" Type="Self.Разговоры" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Телефон">
+              <PropertyRef Name="Код_телефона" />
+            </Principal>
+            <Dependent Role="Разговоры">
+              <PropertyRef Name="Код_телефона" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="АбонентыEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="sysdiagrams" EntityType="Self.sysdiagrams" />
+          <EntitySet Name="Абонент" EntityType="Self.Абонент" />
+          <EntitySet Name="Города" EntityType="Self.Города" />
+          <EntitySet Name="Разговоры" EntityType="Self.Разговоры" />
+          <EntitySet Name="Тариф_Оплата" EntityType="Self.Тариф_Оплата" />
+          <EntitySet Name="Телефон" EntityType="Self.Телефон" />
+          <AssociationSet Name="FK_Абонент_Телефон" Association="Self.FK_Абонент_Телефон">
+            <End Role="Телефон" EntitySet="Телефон" />
+            <End Role="Абонент" EntitySet="Абонент" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Города_Тариф_Оплата" Association="Self.FK_Города_Тариф_Оплата">
+            <End Role="Тариф_Оплата" EntitySet="Тариф_Оплата" />
+            <End Role="Города" EntitySet="Города" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Разговоры_Города" Association="Self.FK_Разговоры_Города">
+            <End Role="Города" EntitySet="Города" />
+            <End Role="Разговоры" EntitySet="Разговоры" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Разговоры_Телефон" Association="Self.FK_Разговоры_Телефон">
+            <End Role="Телефон" EntitySet="Телефон" />
+            <End Role="Разговоры" EntitySet="Разговоры" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="Хранилище АбонентыModelContainer" CdmEntityContainer="АбонентыEntities">
+          <EntitySetMapping Name="sysdiagrams">
+            <EntityTypeMapping TypeName="АбонентыModel.sysdiagrams">
+              <MappingFragment StoreEntitySet="sysdiagrams">
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="principal_id" ColumnName="principal_id" />
+                <ScalarProperty Name="diagram_id" ColumnName="diagram_id" />
+                <ScalarProperty Name="version" ColumnName="version" />
+                <ScalarProperty Name="definition" ColumnName="definition" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Абонент">
+            <EntityTypeMapping TypeName="АбонентыModel.Абонент">
+              <MappingFragment StoreEntitySet="Абонент">
+                <ScalarProperty Name="Номер_Абонента" ColumnName="Номер_Абонента" />
+                <ScalarProperty Name="ФИО_Абонента" ColumnName="ФИО_Абонента" />
+                <ScalarProperty Name="Адрес" ColumnName="Адрес" />
+                <ScalarProperty Name="Код_телефона" ColumnName="Код_телефона" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Города">
+            <EntityTypeMapping TypeName="АбонентыModel.Города">
+              <MappingFragment StoreEntitySet="Города">
+                <ScalarProperty Name="Код_города" ColumnName="Код_города" />
+                <ScalarProperty Name="Название_города" ColumnName="Название_города" />
+                <ScalarProperty Name="Код_тарифа" ColumnName="Код_тарифа" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Разговоры">
+            <EntityTypeMapping TypeName="АбонентыModel.Разговоры">
+              <MappingFragment StoreEntitySet="Разговоры">
+                <ScalarProperty Name="Номер_разговора" ColumnName="Номер_разговора" />
+                <ScalarProperty Name="Дата_разговора" ColumnName="Дата_разговора" />
+                <ScalarProperty Name="Продолжительность_разговора" ColumnName="Продолжительность_разговора" />
+                <ScalarProperty Name="Код_города" ColumnName="Код_города" />
+                <ScalarProperty Name="Код_телефона" ColumnName="Код_телефона" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Тариф_Оплата">
+            <EntityTypeMapping TypeName="АбонентыModel.Тариф_Оплата">
+              <MappingFragment StoreEntitySet="Тариф_Оплата">
+                <ScalarProperty Name="Тариф" ColumnName="Тариф" />
+                <ScalarProperty Name="Оплата" ColumnName="Оплата" />
+                <ScalarProperty Name="Код_тарифа" ColumnName="Код_тарифа" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Телефон">
+            <EntityTypeMapping TypeName="АбонентыModel.Телефон">
+              <MappingFragment StoreEntitySet="Телефон">
+                <ScalarProperty Name="Номер_телефона" ColumnName="Номер_телефона" />
+                <ScalarProperty Name="Номер_договора" ColumnName="Номер_договора" />
+                <ScalarProperty Name="Дата_установки_телефона" ColumnName="Дата_установки_телефона" />
+                <ScalarProperty Name="Код_телефона" ColumnName="Код_телефона" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Нет" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>
